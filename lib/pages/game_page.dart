@@ -4,6 +4,7 @@ import 'package:tictactoe/core/constants.dart';
 import 'package:tictactoe/enums/player_type.dart';
 import 'package:tictactoe/enums/winner_type.dart';
 import 'package:tictactoe/widgets/custom_dialog.dart';
+import 'package:share/share.dart';
 
 class GamePage extends StatefulWidget {
   @override
@@ -35,10 +36,70 @@ class _GamePageState extends State<GamePage> {
         crossAxisAlignment: CrossAxisAlignment.stretch,
         children: [
           _buildBoard(),
+          _buildScoreboard1(),
+          _buildScoreboard2(),
+          _buildVerticalSpace(),
+          _buildCurrentPlayerTurnText(),
+          _buildVerticalSpace(),
           _buildPlayerMode(),
           _buildResetButton(),
+          _buildVerticalSpace(),
+          _buildShareButton(),
         ],
       ),
+    );
+  }
+
+  _buildCurrentPlayerTurnText() {
+    return Container(
+      child: Center(
+        child: Text(
+          "Turn of player: " + _controller.currentPlayerTurn(),
+          style: TextStyle(
+            fontSize: 25.0,
+          ),
+        ),
+      ),
+    );
+  }
+
+  _buildScoreboard1() {
+    return Container(
+      child: Center(
+        child: Text(
+          "Score of player X: " + _controller.scoreboard1(),
+          style: TextStyle(
+            fontSize: 25.0,
+            color: Colors.blue,
+          ),
+        ),
+      ),
+    );
+  }
+
+  _buildScoreboard2() {
+    return Container(
+      child: Center(
+        child: Text(
+          "Score of player O: " + _controller.scoreboard2(),
+          style: TextStyle(
+            fontSize: 25.0,
+            color: Colors.red,
+          ),
+        ),
+      ),
+    );
+  }
+
+  _buildVerticalSpace({double height = 10.0}) {
+    return SizedBox(height: height);
+  }
+
+  _buildShareButton() {
+    return RaisedButton(
+      padding: const EdgeInsets.all(20),
+      child: Text('SHARE'),
+      onPressed: _share,
     );
   }
 
@@ -71,12 +132,8 @@ class _GamePageState extends State<GamePage> {
       child: Container(
         color: _controller.tiles[index].color,
         child: Center(
-          child: Text(
-            _controller.tiles[index].symbol,
-            style: TextStyle(
-              fontSize: 72.0,
-              color: Colors.white,
-            ),
+          child: Image.asset(
+            _controller.tiles[index].image,
           ),
         ),
       ),
@@ -87,6 +144,10 @@ class _GamePageState extends State<GamePage> {
     setState(() {
       _controller.reset();
     });
+  }
+
+  _share() {
+    Share.share('Check the app Tic Tac Toe!');
   }
 
   _onMarkTile(index) {
